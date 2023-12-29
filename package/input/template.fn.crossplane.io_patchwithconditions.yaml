@@ -4,32 +4,59 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: inputs.template.fn.crossplane.io
+  name: patchwithconditions.template.fn.crossplane.io
 spec:
   group: template.fn.crossplane.io
   names:
     categories:
     - crossplane
-    kind: Input
-    listKind: InputList
-    plural: inputs
-    singular: input
+    kind: PatchWithCondition
+    listKind: PatchWithConditionList
+    plural: patchwithconditions
+    singular: patchwithcondition
   scope: Namespaced
   versions:
   - name: v1beta1
     schema:
       openAPIV3Schema:
-        description: Input can be used to provide input to this Function.
+        description: PatchWithCondition can be used to provide input to this Function.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
-          example:
+          config:
             description: Example is an example field. Replace it with whatever input
               you need. :)
-            type: string
+            properties:
+              objects:
+                items:
+                  properties:
+                    condition:
+                      type: string
+                    destinationFieldPath:
+                      type: string
+                    filedValue:
+                      type: string
+                    name:
+                      type: string
+                    sourceFieldPath:
+                      type: string
+                    sourceFieldValue:
+                      type: string
+                  required:
+                  - condition
+                  - destinationFieldPath
+                  - filedValue
+                  - name
+                  - sourceFieldPath
+                  - sourceFieldValue
+                  type: object
+                type: array
+            required:
+            - objects
+            type: object
           kind:
             description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
@@ -38,7 +65,7 @@ spec:
           metadata:
             type: object
         required:
-        - example
+        - config
         type: object
     served: true
     storage: true
