@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"github.com/crossplane/crossplane-runtime/pkg/fieldpath"
+	"github.com/crossplane/function-sdk-go/resource"
+	"k8s.io/apimachinery/pkg/runtime"
 
 	"github.com/crossplane/crossplane-runtime/pkg/errors"
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
@@ -22,19 +25,98 @@ type Function struct {
 
 // RunFunction runs the Function.
 func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
-	f.log.Info("Running function", "tag", req.GetMeta().GetTag())
-
+	log := f.log.WithValues("tag", req.GetMeta().GetTag())
+	log.Info("Running Function")
 	rsp := response.To(req, response.DefaultTTL)
 
-	in := &v1beta1.PatchWithCondition{}
-	if err := request.GetInput(req, in); err != nil {
+	input := &v1beta1.PatchWithCondition{}
+	if err := request.GetInput(req, input); err != nil {
 		response.Fatal(rsp, errors.Wrapf(err, "cannot get Function input from %T", req))
 		return rsp, nil
 	}
+	// Need to add validation for later blame and create task :)
 
-	// TODO: Add your Function logic here!
-	response.Normalf(rsp, "I was run with input %q!", in.Example)
-	f.log.Info("I was run!", "input", in.Example)
+	// *** do not forget as this is critical ***
+
+	// Get The Composite Resource
+
+	oxr, err := request.GetObservedCompositeResource(req)
+
+	if err != nil {
+		response.Fatal(rsp, errors.Wrap(err, "Can not get observed composite resource"))
+		return rsp, nil
+	}
+
+	log = log.WithValues(
+		"xr-version", oxr.Resource.GetAPIVersion(),
+		"xr-kind", oxr.Resource.GetKind(),
+		"xr-name", oxr.Resource.GetName(),
+	)
+
+	// Desired Resource
+
+	desired, err := request.GetDesiredComposedResources(req)
+	if err != nil {
+		response.Fatal(rsp, errors.Wrap(err, "Can not get desired ComposedResource"))
+		return rsp, err
+	}
+
+	observed, err := request.GetObservedComposedResources(req)
+	if err != nil {
+		response.Fatal(rsp, errors.Wrap(err, "Can not get observed ComposedResource"))
+		return rsp, err
+	}
+
+	// *** substitution Loop *** //
+
+	for _, obj := range input.Cfg.Objs {
+		if observed[resource.Name(obj.Name)].Resource != nil {
+			observedPaved, err := fieldpath.PaveObject(observed[resource.Name(obj.Name)].Resource)
+			if err != nil {
+				response.Fatal(rsp, errors.Wrap(err, "Can not create paved object from observed Resource"))
+				return rsp, err
+			}
+			getFieldPath, err := observedPaved.GetValue(obj.DestinationFieldPath)
+			if err != nil {
+				response.Fatal(rsp, errors.Wrap(err, "Can not get value of fieldpath from observed Resource"))
+				return rsp, err
+			}
+			getFieldValue, err := observedPaved.GetValue(obj.FieldValue)
+			if err != nil {
+				response.Fatal(rsp, errors.Wrap(err, "Can not get value of fieldValue from observed Resource"))
+				return rsp, err
+			}
+
+			log.Debug("Found Corresponding Observed resource", "Path", getFieldPath, "Value", getFieldValue)
+		}
+		if observed[resource.Name(obj.Name)].Resource == nil {
+			panic(err)
+		}
+	}
 
 	return rsp, nil
+}
+
+func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue string, conditon string, to runtime.Object) error {
+	paved, err := fieldpath.PaveObject(to)
+	if err != nil {
+		return err
+	}
+	switch conditon {
+	case "Exists":
+		if svalue != "" && sfp != "" {
+			err := paved.SetValue(dsp, dvalue)
+			if err != nil {
+				return err
+			}
+		}
+	case "NotExists":
+		if svalue == "" {
+			err := paved.SetValue(dsp, dvalue)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
 }

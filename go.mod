@@ -1,4 +1,5 @@
 module github.com/crossplane/function-with-condition
+
 go 1.21
 
 toolchain go1.21.3
