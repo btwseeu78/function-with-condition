@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: patchwithconditions.template.fn.crossplane.io
+  name: patchwithconditions.renault.fn.crossplane.io
 spec:
-  group: template.fn.crossplane.io
+  group: renault.fn.crossplane.io
   names:
     categories:
     - crossplane
