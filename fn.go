@@ -103,7 +103,12 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			}
 		}
 	}
-	response.SetDesiredComposedResources(rsp, desired)
+	err = response.SetDesiredComposedResources(rsp, desired)
+	if err != nil {
+		response.Fatal(rsp, errors.Wrap(err, "Unable to generate the desired compose the object"))
+		return rsp, err
+	}
+
 	return rsp, nil
 }
 
