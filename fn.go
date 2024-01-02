@@ -68,7 +68,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	}
 
 	// *** substitution Loop *** //
-
+	f.log.Info("Details of obj", "obs", observed, "desired", desired)
 	for _, obj := range input.Cfg.Objs {
 		cd, ok := observed[resource.Name(obj.Name)]
 		f.log.Info("Details of obj", "obs", observed, "cd", cd, "desired", desired)
