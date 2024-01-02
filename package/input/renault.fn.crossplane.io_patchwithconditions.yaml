@@ -51,7 +51,6 @@ spec:
                   - filedValue
                   - name
                   - sourceFieldPath
-                  - sourceFieldValue
                   type: object
                 type: array
             required:
