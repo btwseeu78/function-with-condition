@@ -6,7 +6,7 @@ metadata:
   annotations:
     render.crossplane.io/runtime: Development
 spec:
-  package: {}
+  package: ""
 ...
 ---
 apiVersion: pkg.crossplane.io/v1beta1
