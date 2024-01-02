@@ -1,6 +1,6 @@
-# Replace this with your XR!
-apiVersion: example.crossplane.io/v1
-kind: XR
+apiVersion: arpan.io/v1alpha1
+kind: XMySpace
 metadata:
-  name: example-xr
-spec: {}
+  name: testcomposedwww
+spec:
+  name: test
