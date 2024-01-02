@@ -38,7 +38,7 @@ spec:
                 toFieldPath: metadata.namespace
     - step: generate-name
       functionRef:
-        name: function-template-go
+        name: function-with-condition
         input:
           apiVersion: renault.fn.crossplane.io/v1beta1
           kind: PatchWithCondition
