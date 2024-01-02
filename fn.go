@@ -70,8 +70,13 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	// *** substitution Loop *** //
 
 	for _, obj := range input.Cfg.Objs {
-		if observed[resource.Name(obj.Name)].Resource != nil {
-			observedPaved, err := fieldpath.PaveObject(observed[resource.Name(obj.Name)].Resource)
+		cd, ok := observed[resource.Name(obj.Name)]
+		if !ok {
+			response.Fatal(rsp, errors.Wrap(err, "The Specified Resource doees not exist"))
+			return rsp, nil
+		}
+		if cd.Resource != nil {
+			observedPaved, err := fieldpath.PaveObject(cd.Resource)
 			if err != nil {
 				response.Fatal(rsp, errors.Wrap(err, "Can not create paved object from observed Resource"))
 				return rsp, err
@@ -89,8 +94,13 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 
 			log.Debug("Found Corresponding Observed resource", "Path", getFieldPath, "Value", getFieldValue)
 		}
-		if observed[resource.Name(obj.Name)].Resource == nil {
-			panic(err)
+		if observed[resource.Name(obj.Name)].Resource == nil && obj.FieldValue != "" {
+			err := patchFieldValueToObject(obj.SourceFieldPath, obj.DestinationFieldPath, obj.SourceFieldValue, obj.FieldValue, obj.Condition, desired[resource.Name(obj.Name)].Resource)
+
+			if err != nil {
+				response.Fatal(rsp, errors.Wrap(err, "Unable to patch the object"))
+				return rsp, err
+			}
 		}
 	}
 
