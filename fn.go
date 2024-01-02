@@ -71,6 +71,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 
 	for _, obj := range input.Cfg.Objs {
 		cd, ok := observed[resource.Name(obj.Name)]
+		f.log.Info("Details of obj", "obs", observed, "cd", cd, "desired", desired)
 		if !ok {
 			response.Fatal(rsp, errors.Wrap(err, "The Specified Resource doees not exist"))
 			return rsp, nil
@@ -103,6 +104,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			}
 		}
 	}
+	f.log.Info("Details of obj", "obs", observed, "desired", desired)
 	err = response.SetDesiredComposedResources(rsp, desired)
 	if err != nil {
 		response.Fatal(rsp, errors.Wrap(err, "Unable to generate the desired compose the object"))
