@@ -94,7 +94,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 
 			log.Debug("Found Corresponding Observed resource", "Path", getFieldPath, "Value", getFieldValue)
 		}
-		if observed[resource.Name(obj.Name)].Resource == nil && obj.FieldValue != "" {
+		if cd.Resource == nil && obj.FieldValue != "" {
 			err := patchFieldValueToObject(obj.SourceFieldPath, obj.DestinationFieldPath, obj.SourceFieldValue, obj.FieldValue, obj.Condition, desired[resource.Name(obj.Name)].Resource)
 
 			if err != nil {
@@ -103,7 +103,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			}
 		}
 	}
-
+	response.SetDesiredComposedResources(rsp, desired)
 	return rsp, nil
 }
 

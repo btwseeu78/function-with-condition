@@ -6,7 +6,7 @@ metadata:
   annotations:
     render.crossplane.io/runtime: Development
 spec:
-  package: xpkg.upbound.io/linuxarpan/functions-template-go:v0.11.0
+  package: {}
 ...
 ---
 apiVersion: pkg.crossplane.io/v1beta1
