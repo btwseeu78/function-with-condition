@@ -37,18 +37,18 @@ spec:
                       type: string
                     destinationFieldPath:
                       type: string
-                    filedValue:
+                    fieldValue:
+                      type: string
+                    matchValue:
                       type: string
                     name:
                       type: string
                     sourceFieldPath:
                       type: string
-                    sourceFieldValue:
-                      type: string
                   required:
                   - condition
                   - destinationFieldPath
-                  - filedValue
+                  - fieldValue
                   - name
                   - sourceFieldPath
                   type: object
