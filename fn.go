@@ -126,7 +126,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 				return err
 			}
 		}
-	case "Equal":
+	case "Equals":
 		if svalue == "" && dvalue == "" {
 			return errors.New("You can Do Equality Between Null Values")
 		} else {
