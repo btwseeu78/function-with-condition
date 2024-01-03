@@ -87,7 +87,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			log.Debug("Found Corresponding Observed resource", "Path", getFieldPath, "Value", getFieldValue)
 		}
 		if cd.Resource == nil && obj.FieldValue != "" {
-			err := patchFieldValueToObject(obj.SourceFieldPath, obj.DestinationFieldPath, obj.SourceFieldValue, obj.FieldValue, obj.Condition, desired[resource.Name(obj.Name)].Resource)
+			err := patchFieldValueToObject(obj.SourceFieldPath, obj.DestinationFieldPath, obj.MatchValue, obj.FieldValue, obj.Condition, desired[resource.Name(obj.Name)].Resource)
 
 			if err != nil {
 				response.Fatal(rsp, errors.Wrap(err, "Unable to patch the object"))
