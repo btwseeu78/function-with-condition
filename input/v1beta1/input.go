@@ -18,8 +18,8 @@ type Object struct {
 	Name                 string `json:"name"`
 	SourceFieldPath      string `json:"sourceFieldPath"`
 	DestinationFieldPath string `json:"destinationFieldPath"`
-	MatchValue           string `json:"sourceFieldValue,omitempty"`
-	FieldValue           string `json:"filedValue"`
+	MatchValue           string `json:"matchValue,omitempty"`
+	FieldValue           string `json:"fieldValue"`
 	Condition            string `json:"condition"`
 }
 
