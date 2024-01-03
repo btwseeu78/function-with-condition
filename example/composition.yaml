@@ -48,5 +48,5 @@ spec:
             sourceFieldPath: "spec.forProvider.manifest.metadata.name"
             destinationFieldPath: "spec.forProvider.manifest.spec.containers[0].name"
             matchValue: "test"
-            filedValue: "test-tuk"
+            fieldValue: "test-tuk"
             condition: Exists
