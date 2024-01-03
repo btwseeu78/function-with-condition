@@ -39,14 +39,14 @@ spec:
     - step: generate-name
       functionRef:
         name: function-with-condition
-        input:
-          apiVersion: renault.fn.crossplane.io/v1beta1
-          kind: PatchWithCondition
-          config:
-            objects:
-            - name: customSpace
-              sourceFieldPath: "spec.forProvider.manifest.metadata.name"
-              destinationFieldPath: "spec.forProvider.manifest.spec.containers[0].name"
-              sourceFieldValue: "test"
-              fieldValue: "test-tuk"
-              condition: Exists
+      input:
+        apiVersion: renault.fn.crossplane.io/v1beta1
+        kind: PatchWithCondition
+        config:
+          objects:
+          - name: customSpace
+            sourceFieldPath: "spec.forProvider.manifest.metadata.name"
+            destinationFieldPath: "spec.forProvider.manifest.spec.containers[0].name"
+            sourceFieldValue: "test"
+            filedValue: "test-tuk"
+            condition: Exists

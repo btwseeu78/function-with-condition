@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/crossplane/crossplane-runtime/pkg/fieldpath"
 	"github.com/crossplane/function-sdk-go/resource"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -34,11 +35,6 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 		response.Fatal(rsp, errors.Wrapf(err, "cannot get Function input from %T", req))
 		return rsp, nil
 	}
-	// Need to add validation for later blame and create task :)
-
-	// *** do not forget as this is critical ***
-
-	// Get The Composite Resource
 
 	oxr, err := request.GetObservedCompositeResource(req)
 
@@ -68,14 +64,9 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	}
 
 	// *** substitution Loop *** //
-	f.log.Info("Details of obj", "obs", observed, "desired", desired)
+	log.Debug("Check Observed Resource", "DR", desired)
 	for _, obj := range input.Cfg.Objs {
-		cd, ok := observed[resource.Name(obj.Name)]
-		f.log.Info("Details of obj", "obs", observed, "cd", cd, "desired", desired)
-		if !ok {
-			response.Fatal(rsp, errors.Wrap(err, "The Specified Resource doees not exist"))
-			return rsp, nil
-		}
+		cd, _ := observed[resource.Name(obj.Name)]
 		if cd.Resource != nil {
 			observedPaved, err := fieldpath.PaveObject(cd.Resource)
 			if err != nil {
