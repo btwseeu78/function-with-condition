@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-
+	"github.com/crossplane/crossplane-runtime/pkg/errors"
 	"github.com/crossplane/crossplane-runtime/pkg/fieldpath"
+	"github.com/crossplane/crossplane-runtime/pkg/logging"
 	"github.com/crossplane/function-sdk-go/resource"
 	"k8s.io/apimachinery/pkg/runtime"
-
-	"github.com/crossplane/crossplane-runtime/pkg/errors"
-	"github.com/crossplane/crossplane-runtime/pkg/logging"
+	"reflect"
 
 	fnv1beta1 "github.com/crossplane/function-sdk-go/proto/v1beta1"
 	"github.com/crossplane/function-sdk-go/request"
@@ -87,11 +86,14 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			log.Debug("Found Corresponding Observed resource", "Path", getFieldPath, "Value", getFieldValue)
 		}
 		if cd.Resource == nil && obj.FieldValue != "" {
+			f.log.Debug("Soiurce Field Path ", "type", reflect.TypeOf(obj.FieldValue))
+			f.log.Debug("Match Field Path ", "type", reflect.TypeOf(obj.MatchValue))
+
 			err := patchFieldValueToObject(obj.SourceFieldPath, obj.DestinationFieldPath, obj.MatchValue, obj.FieldValue, obj.Condition, desired[resource.Name(obj.Name)].Resource)
 
 			if err != nil {
 				response.Fatal(rsp, errors.Wrap(err, "Unable to patch the object"))
-				return rsp, err
+				return rsp, nil
 			}
 		}
 	}
@@ -118,12 +120,19 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 				return err
 			}
 		}
+		if svalue == "" {
+			return errors.New("The Source Field Is Blank")
+		}
 	case "NotExists":
 		if svalue == "" {
 			err := paved.SetValue(dsp, dvalue)
 			if err != nil {
 				return err
 			}
+		}
+	case "Equal":
+		if svalue == "" && dvalue == "" {
+			return errors.New("You can Do Equality Between Null Values")
 		}
 	}
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
