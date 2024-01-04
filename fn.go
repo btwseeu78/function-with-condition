@@ -173,10 +173,10 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
 			}
-			suggaredlogger.Info("List of field", listVal)
+			suggaredlogger.Info("List of field: ", listVal)
 			sourcetype := reflect.TypeOf(svalue)
-			stype := sourcetype.Name()
-			suggaredlogger.Info("converted type is", stype)
+			stype, skind := sourcetype.Name(), sourcetype.Kind()
+			suggaredlogger.Info("converted type is: ", stype, "KInd:", skind)
 
 		}
 	}
