@@ -175,8 +175,9 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			}
 			suggaredlogger.Info("List of field: ", listVal)
 			sourcetype := reflect.TypeOf(svalue)
+			sarry := reflect.MakeSlice(sourcetype, 0, 0)
 			stype, skind := sourcetype.Name(), sourcetype.Kind()
-			suggaredlogger.Info("converted type is: ", stype, "KInd:", skind, "type", reflect.TypeOf("int"))
+			suggaredlogger.Info("converted type is: ", stype, "KInd:", skind, "type", sarry.Type())
 
 		}
 	}
