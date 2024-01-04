@@ -50,3 +50,9 @@ spec:
             matchValue: "test"
             fieldValue: "test-tuk"
             condition: Equals
+          - name: customSpace
+            sourceFieldPath: "spec.forProvider.manifest.metadata.name"
+            destinationFieldPath: "spec.forProvider.manifest.spec.containers[0].name"
+            matchValue: "test"
+            fieldValue: "test-tuk"
+            condition: In
