@@ -9,7 +9,9 @@ import (
 	"github.com/crossplane/function-sdk-go/request"
 	"github.com/crossplane/function-sdk-go/resource"
 	"github.com/crossplane/function-sdk-go/response"
+	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/runtime"
+	"reflect"
 
 	"github.com/crossplane/function-with-condition/input/v1beta1"
 )
@@ -104,6 +106,8 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 }
 
 func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue string, conditon string, to runtime.Object) error {
+	logger, _ := zap.NewProduction()
+	suggaredlogger := logger.Sugar()
 	paved, err := fieldpath.PaveObject(to)
 	if err != nil {
 		return err
@@ -139,8 +143,43 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 				if err != nil {
 					return err
 				}
+			} else {
+				suggaredlogger.Debug("The Values Are Not Equal")
 			}
 		}
+	case "NotEqual":
+		if svalue == "" && dvalue == "" {
+			return errors.New("You can Do NotEquality Between Null Values")
+		} else {
+			fieldVal, err := paved.GetString(sfp)
+			if err != nil {
+				return errors.New("Unable to get Value of SourceField")
+			}
+			if fieldVal != svalue {
+				err := paved.SetValue(dsp, dvalue)
+				if err != nil {
+					return err
+				}
+			} else {
+				suggaredlogger.Info("The Condition Does not Match")
+			}
+
+		}
+	case "In":
+		if svalue == "" {
+			suggaredlogger.Debug("Unable to get the Object")
+		} else {
+			listVal, err := paved.GetValue(sfp)
+			if err != nil {
+				suggaredlogger.Debug("Unable to generate required paved object")
+			}
+			suggaredlogger.Info("List of field", listVal)
+			sourcetype := reflect.TypeOf(svalue)
+			stype := sourcetype.Name()
+			suggaredlogger.Info("converted type is", stype)
+
+		}
 	}
+	defer suggaredlogger.Sync()
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
 }
