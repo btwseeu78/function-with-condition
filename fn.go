@@ -175,7 +175,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			}
 			stringVal, ok := listVal.([]string)
 			if !ok {
-				suggaredlogger.Info("List of field: ", reflect.TypeOf(listVal))
+				suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(listVal))
 			}
 			if slices.Contains(stringVal, svalue) {
 				suggaredlogger.Info("converted type is: ", stringVal)
