@@ -169,7 +169,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 		if svalue == "" {
 			suggaredlogger.Debug("Unable to get the Object")
 		} else {
-			listVal, err := paved.GetValue(sfp)
+			listVal, err := paved.GetStringArray(sfp)
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
 			}
