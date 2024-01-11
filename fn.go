@@ -12,6 +12,7 @@ import (
 	"github.com/crossplane/function-with-condition/input/v1beta1"
 	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/runtime"
+	"reflect"
 	"slices"
 )
 
@@ -169,6 +170,8 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			suggaredlogger.Debug("Unable to get the Object")
 		} else {
 			listVal, err := paved.GetStringArray(sfp)
+			checkVal, err := paved.GetValue(sfp)
+			suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(checkVal))
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
 			}
