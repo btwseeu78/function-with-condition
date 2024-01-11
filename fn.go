@@ -171,14 +171,15 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 		} else {
 			listVal, err := paved.GetStringArray(sfp)
 			checkVal, err := paved.GetValue(sfp)
+			cnvrt, ok := checkVal.([]string)
+			if !ok {
+				suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(cnvrt))
+			}
 			suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(checkVal))
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
 			}
-			//stringVal, ok := listVal.([]string)
-			//if !ok {
-			//	suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(listVal))
-			//}
+
 			if slices.Contains(listVal, svalue) {
 				suggaredlogger.Info("converted type is: ", listVal)
 				err := paved.SetValue(dsp, dvalue)
@@ -188,7 +189,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			} else {
 				suggaredlogger.Info("The List is", listVal, "match", svalue)
 			}
-			suggaredlogger.Info("List of field: ", listVal)
+			suggaredlogger.Info("List of field: ", cnvrt)
 
 		}
 	}
