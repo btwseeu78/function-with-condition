@@ -189,7 +189,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			} else {
 				suggaredlogger.Info("The List is", listVal, "match", svalue)
 			}
-			suggaredlogger.Info("List of field: ", cnvrt)
+			suggaredlogger.Info("List of field is: ", cnvrt)
 
 		}
 	}
