@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/crossplane/crossplane-runtime/pkg/errors"
 	"github.com/crossplane/crossplane-runtime/pkg/fieldpath"
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
@@ -171,10 +172,10 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 		} else {
 			listVal, err := paved.GetStringArray(sfp)
 			checkVal, err := paved.GetValue(sfp)
-			cnvrt, ok := checkVal.([]string)
-			if !ok {
-				suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(cnvrt))
-			}
+			cnvrt := fmt.Sprintf("%v", checkVal)
+			//if !ok {
+			//	suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(cnvrt))
+			//}
 			suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(checkVal))
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
