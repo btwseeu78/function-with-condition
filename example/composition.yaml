@@ -58,5 +58,5 @@ spec:
             sourceFieldPath: "spec.forProvider.manifest.env"
             destinationFieldPath: "spec.forProvider.manifest.spec.containers[0].name"
             matchValue: "test"
-            fieldValue: "test-tuk"
+            fieldValue: "test-tuk-tuk-tuk"
             condition: In
