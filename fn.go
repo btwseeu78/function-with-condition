@@ -9,11 +9,10 @@ import (
 	"github.com/crossplane/function-sdk-go/request"
 	"github.com/crossplane/function-sdk-go/resource"
 	"github.com/crossplane/function-sdk-go/response"
+	"github.com/crossplane/function-with-condition/input/v1beta1"
 	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/runtime"
-	"reflect"
-
-	"github.com/crossplane/function-with-condition/input/v1beta1"
+	"slices"
 )
 
 // Function returns whatever response you ask it to.
@@ -173,11 +172,17 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
 			}
+			stringVal := listVal.([]string)
+			if slices.Contains(stringVal, svalue) {
+				suggaredlogger.Info("converted type is: ", stringVal)
+				err := paved.SetValue(dsp, dvalue)
+				if err != nil {
+					return err
+				}
+			} else {
+				suggaredlogger.Info("The List is", stringVal, "match", svalue)
+			}
 			suggaredlogger.Info("List of field: ", listVal)
-			sourcetype := reflect.TypeOf(svalue)
-			sarry := reflect.MakeSlice(sourcetype, 0, 0)
-			stype, skind := sourcetype.Name(), sourcetype.Kind()
-			suggaredlogger.Info("converted type is: ", stype, "KInd:", skind, "type", sarry.Type())
 
 		}
 	}
