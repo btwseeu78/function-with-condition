@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/crossplane/crossplane-runtime/pkg/errors"
 	"github.com/crossplane/crossplane-runtime/pkg/fieldpath"
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
@@ -13,7 +12,6 @@ import (
 	"github.com/crossplane/function-with-condition/input/v1beta1"
 	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/runtime"
-	"reflect"
 	"slices"
 )
 
@@ -171,9 +169,6 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			suggaredlogger.Debug("Unable to get the Object")
 		} else {
 			listVal, err := paved.GetStringArray(sfp)
-			checkVal, err := paved.GetValue(sfp)
-			cnvrt := fmt.Sprintf("%v", checkVal)
-			suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(checkVal))
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
 			}
@@ -187,7 +182,6 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			} else {
 				suggaredlogger.Info("The List is", listVal, "match", svalue)
 			}
-			suggaredlogger.Info("List of field is: ", cnvrt)
 
 		}
 
@@ -195,10 +189,10 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 		if svalue == "" {
 
 		} else {
-			listVal, err := paved.GetValue(sfp)
+			outVal, err := paved.GetValue(sfp)
 			if err != nil {
 				tmpType := make([]interface{}, 0)
-				cnvrtVal := listVal.([]interface{})
+				cnvrtVal := outVal.([]interface{})
 				tmpType = append(tmpType, cnvrtVal...)
 				for val := range tmpType {
 					suggaredlogger.Info("value after the conversion inside not in is  ::::", val)

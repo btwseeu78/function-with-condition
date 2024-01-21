@@ -27,9 +27,9 @@ spec:
                     apiVersion: v1
                     kind: Namespace
                     env:
-                      - "test"
-                      - "tuk"
-                      - "col"
+                    - "test"
+                    - "tuk"
+                    - "col"
             patches:
               - type: FromCompositeFieldPath
                 fromFieldPath: spec.name
@@ -64,5 +64,5 @@ spec:
             sourceFieldPath: "spec.forProvider.manifest.env"
             destinationFieldPath: "spec.forProvider.manifest.spec.containers[0].name"
             matchValue: "test"
-            fieldValue: "test-tuk-tuk-tuk"
+            fieldValue: "test"
             condition: NotIn
