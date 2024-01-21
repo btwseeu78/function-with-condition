@@ -192,7 +192,8 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 				tmpType := make([]interface{}, 0)
 				cnvrtVal := listVal.([]interface{})
 				tmpType = append(tmpType, cnvrtVal...)
-				log.Info("checking the fuck happening for conversion", "listVal", listVal)
+				typ := tmpType[0].(string)
+				log.Info("checking the fuck happening for conversion", "listVal", listVal, "type", typ)
 			} else {
 				log.Info("Errored Out", "error", err, "for source field", sfp, "val", listVal)
 				return err
