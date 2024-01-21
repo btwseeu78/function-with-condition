@@ -65,4 +65,4 @@ spec:
             destinationFieldPath: "spec.forProvider.manifest.spec.containers[0].name"
             matchValue: "test"
             fieldValue: "test"
-            condition: NotIn
+            condition: Nin
