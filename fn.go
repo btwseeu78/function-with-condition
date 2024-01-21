@@ -10,7 +10,6 @@ import (
 	"github.com/crossplane/function-sdk-go/resource"
 	"github.com/crossplane/function-sdk-go/response"
 	"github.com/crossplane/function-with-condition/input/v1beta1"
-	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/runtime"
 	"slices"
 )
@@ -86,7 +85,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 		}
 		if cd.Resource == nil && obj.FieldValue != "" {
 
-			err := patchFieldValueToObject(obj.SourceFieldPath, obj.DestinationFieldPath, obj.MatchValue, obj.FieldValue, obj.Condition, desired[resource.Name(obj.Name)].Resource)
+			err := f.patchFieldValueToObject(obj.SourceFieldPath, obj.DestinationFieldPath, obj.MatchValue, obj.FieldValue, obj.Condition, desired[resource.Name(obj.Name)].Resource)
 
 			if err != nil {
 				response.Fatal(rsp, errors.Wrap(err, "Unable to patch the object"))
@@ -104,9 +103,8 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	return rsp, nil
 }
 
-func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue string, conditon string, to runtime.Object) error {
-	logger, _ := zap.NewDevelopment()
-	suggaredlogger := logger.Sugar()
+func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue string, conditon string, to runtime.Object) error {
+	log := f.log.WithValues("function", "patchFieldValeu", "path", sfp)
 	paved, err := fieldpath.PaveObject(to)
 	if err != nil {
 		return err
@@ -166,29 +164,27 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 		}
 	case "In":
 		if svalue == "" {
-			suggaredlogger.Debug("Unable to get the Object")
+			log.Debug("Unable to get the Object")
 		} else {
 			listVal, err := paved.GetStringArray(sfp)
 			if err != nil {
-				suggaredlogger.Debug("Unable to generate required paved object")
+				log.Debug("Unable to generate required paved object")
 			}
 
 			if slices.Contains(listVal, svalue) {
-				suggaredlogger.Info("converted type is: ", listVal)
 				err := paved.SetValue(dsp, dvalue)
 				if err != nil {
 					return err
 				}
 			} else {
-				suggaredlogger.Info("The List is", listVal, "match", svalue)
+
 			}
 
 		}
 
 	case "NotIn":
-		suggaredlogger.Debug("The Inside in", sfp, "NotIn", svalue)
 		if svalue == "" {
-
+			log.Debug("The Value is blank Sadly")
 		} else {
 			listVal, err := paved.GetStringArray(sfp)
 			if err != nil {
@@ -196,15 +192,14 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 				//cnvrtVal := listVal.([]interface{})
 				//tmpType = append(tmpType, cnvrtVal...)
 				for val := range listVal {
-					suggaredlogger.Info("value after the conversion inside not in is  ::::", val)
+					log.Info("value after the conversion inside not in is  ::::", val)
 				}
 			} else {
-				suggaredlogger.Info("Errored Out")
+				log.Info("Errored Out")
 				return err
 			}
 		}
 
 	}
-	defer suggaredlogger.Sync()
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
 }
