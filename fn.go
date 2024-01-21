@@ -189,12 +189,12 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 		if svalue == "" {
 
 		} else {
-			outVal, err := paved.GetStringArray(sfp)
+			listVal, err := paved.GetStringArray(sfp)
 			if err != nil {
 				//tmpType := make([]interface{}, 0)
-				//cnvrtVal := outVal.([]interface{})
+				//cnvrtVal := listVal.([]interface{})
 				//tmpType = append(tmpType, cnvrtVal...)
-				for val := range outVal {
+				for val := range listVal {
 					suggaredlogger.Info("value after the conversion inside not in is  ::::", val)
 				}
 			} else {
