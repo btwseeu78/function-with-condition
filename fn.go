@@ -193,7 +193,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 				tmpType = append(tmpType, cnvrtVal...)
 				log.Info("checking the fuck happening for conversion", "temptype", tmpType)
 			} else {
-				log.Info("Errored Out", sfp)
+				log.Info("Errored Out", "for source field", sfp)
 				return err
 			}
 		}
