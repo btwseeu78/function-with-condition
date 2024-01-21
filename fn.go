@@ -193,7 +193,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 
 	case "NotIn":
 		if svalue == "" {
-			suggaredlogger.Debug("-----------Inside Not In-------------------")
+			suggaredlogger.Info("-----------Inside Not In-------------------")
 		} else {
 			listVal, err := paved.GetValue(sfp)
 			if err != nil {
