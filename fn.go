@@ -141,7 +141,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 					return err
 				}
 			} else {
-				suggaredlogger.Debug("The Values Are Not Equal")
+				log.Debug("The Values Are Not Equal")
 			}
 		}
 	case "NotEqual":
@@ -158,7 +158,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 					return err
 				}
 			} else {
-				suggaredlogger.Info("The Condition Does not Match")
+				log.Info("The Condition Does not Match")
 			}
 
 		}
