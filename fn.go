@@ -200,6 +200,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 				}
 			} else {
 				suggaredlogger.Info("Errored Out")
+				return err
 			}
 		}
 
