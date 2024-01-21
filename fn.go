@@ -186,6 +186,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 		if svalue == "" {
 			log.Debug("The Value is blank Sadly")
 		} else {
+			log.Info("paved object is", "pavedObj", paved)
 			listVal, err := paved.GetStringArray(sfp)
 			if err != nil {
 				//tmpType := make([]interface{}, 0)
