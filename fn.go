@@ -186,6 +186,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 		}
 
 	case "NotIn":
+		suggaredlogger.Debug("The Inside in", sfp, "NotIn", svalue)
 		if svalue == "" {
 
 		} else {
