@@ -186,7 +186,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 		if svalue == "" {
 			log.Debug("The Value is blank Sadly")
 		} else {
-			listVal, err := paved.GetStringArray(sfp)
+			listVal, err := paved.GetValue(sfp)
 			if err != nil {
 				//tmpType := make([]interface{}, 0)
 				//cnvrtVal := listVal.([]interface{})
@@ -195,7 +195,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 					log.Info("value after the conversion inside not in is  ::::", val)
 				}
 			} else {
-				log.Info("Errored Out")
+				log.Info("Errored Out", sfp)
 				return err
 			}
 		}
