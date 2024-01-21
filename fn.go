@@ -187,14 +187,14 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 			log.Debug("The Value is blank Sadly")
 		} else {
 			log.Info("paved object is", "pavedObj", paved)
-			listVal, err := paved.GetStringArray("spec.forProvider.manifest.env")
+			listVal, err := paved.GetValue(sfp)
 			if err != nil {
 				//tmpType := make([]interface{}, 0)
 				//cnvrtVal := listVal.([]interface{})
 				//tmpType = append(tmpType, cnvrtVal...)
 				log.Info("checking the fuck happening for conversion", "listVal", listVal)
 			} else {
-				log.Info("Errored Out", "for source field", sfp)
+				log.Info("Errored Out", "for source field", sfp, "val", listVal)
 				return err
 			}
 		}
