@@ -173,9 +173,6 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			listVal, err := paved.GetStringArray(sfp)
 			checkVal, err := paved.GetValue(sfp)
 			cnvrt := fmt.Sprintf("%v", checkVal)
-			//if !ok {
-			//	suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(cnvrt))
-			//}
 			suggaredlogger.Info("Type of this list is: ", reflect.TypeOf(checkVal))
 			if err != nil {
 				suggaredlogger.Debug("Unable to generate required paved object")
@@ -193,6 +190,22 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 			suggaredlogger.Info("List of field is: ", cnvrt)
 
 		}
+
+	case "NotIn":
+		if svalue == "" {
+			suggaredlogger.Debug("-----------Inside Not In-------------------")
+		} else {
+			listVal, err := paved.GetValue(sfp)
+			if err != nil {
+				tmpType := make([]interface{}, 0)
+				cnvrtVal := listVal.([]interface{})
+				tmpType = append(tmpType, cnvrtVal...)
+				for val := range tmpType {
+					suggaredlogger.Info("value after conversion inside not in is  ::::", val)
+				}
+			}
+		}
+
 	}
 	defer suggaredlogger.Sync()
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
