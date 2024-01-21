@@ -201,7 +201,7 @@ func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue strin
 				cnvrtVal := listVal.([]interface{})
 				tmpType = append(tmpType, cnvrtVal...)
 				for val := range tmpType {
-					suggaredlogger.Info("value after conversion inside not in is  ::::", val)
+					suggaredlogger.Info("value after the conversion inside not in is  ::::", val)
 				}
 			} else {
 				suggaredlogger.Info("Errored Out")
