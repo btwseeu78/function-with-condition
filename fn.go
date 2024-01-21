@@ -105,7 +105,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 }
 
 func patchFieldValueToObject(sfp string, dsp string, svalue string, dvalue string, conditon string, to runtime.Object) error {
-	logger, _ := zap.NewProduction()
+	logger, _ := zap.NewDevelopment()
 	suggaredlogger := logger.Sugar()
 	paved, err := fieldpath.PaveObject(to)
 	if err != nil {
