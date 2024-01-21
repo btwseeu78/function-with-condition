@@ -186,12 +186,12 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 		if svalue == "" {
 			log.Debug("The Value is blank Sadly")
 		} else {
-			listVal, err := paved.GetValue(sfp)
+			listVal, err := paved.GetStringArray(sfp)
 			if err != nil {
-				tmpType := make([]interface{}, 0)
-				cnvrtVal := listVal.([]interface{})
-				tmpType = append(tmpType, cnvrtVal...)
-				log.Info("checking the fuck happening for conversion", "temptype", tmpType)
+				//tmpType := make([]interface{}, 0)
+				//cnvrtVal := listVal.([]interface{})
+				//tmpType = append(tmpType, cnvrtVal...)
+				log.Info("checking the fuck happening for conversion", "listVal", listVal)
 			} else {
 				log.Info("Errored Out", "for source field", sfp)
 				return err
