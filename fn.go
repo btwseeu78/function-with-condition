@@ -185,21 +185,30 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 	case "NotIn":
 		if svalue == "" {
 			log.Debug("The Value is blank Sadly")
+			return nil
 		} else {
 			log.Info("paved object is", "pavedObj", paved)
 			listVal, err := paved.GetValue(sfp)
-			if err == nil {
-				tmpType := make([]interface{}, 0)
-				cnvrtVal := listVal.([]interface{})
-				tmpType = append(tmpType, cnvrtVal...)
-				typ := tmpType[0].(string)
-				log.Info("checking the fuck happening for conversion", "listVal", listVal, "type", typ)
-			} else {
+			if err != nil {
 				log.Info("Errored Out", "error", err, "for source field", sfp, "val", listVal)
 				return err
+			} else {
+				cnvrtVal := listVal.([]interface{})
+				inthere := associationCheck(cnvrtVal, svalue)
+				log.Info("checking the fuck happening for conversion", "listVal", listVal, "Its In There", inthere)
+
 			}
 		}
 
 	}
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
+}
+
+func associationCheck(a []interface{}, b interface{}) bool {
+	for _, val := range a {
+		if val == b {
+			return true
+		}
+	}
+	return false
 }
