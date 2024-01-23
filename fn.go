@@ -212,7 +212,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
 }
 
-func associationCheck[E comparable](a []E, b E) bool {
+func associationCheck(a []interface{}, b interface{}) bool {
 	for _, val := range a {
 		if val == b {
 			return true
