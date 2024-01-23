@@ -196,6 +196,14 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 				cnvrtVal := listVal.([]interface{})
 				inthere := associationCheck(cnvrtVal, svalue)
 				log.Info("checking the fuck happening for conversion", "listVal", listVal, "Its In There", inthere)
+				if !inthere {
+					err := paved.SetValue(dsp, dvalue)
+					if err != nil {
+						return err
+					}
+				} else {
+					log.Info("Does not satisfy the condition", "sourceValue", svalue, "fieldValue", cnvrtVal)
+				}
 
 			}
 		}
@@ -204,7 +212,7 @@ func (f *Function) patchFieldValueToObject(sfp string, dsp string, svalue string
 	return runtime.DefaultUnstructuredConverter.FromUnstructured(paved.UnstructuredContent(), to)
 }
 
-func associationCheck(a []interface{}, b interface{}) bool {
+func associationCheck[E comparable](a []E, b E) bool {
 	for _, val := range a {
 		if val == b {
 			return true
