@@ -24,12 +24,12 @@ type Function struct {
 // RunFunction runs the Function.
 func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequest) (*fnv1beta1.RunFunctionResponse, error) {
 	log := f.log.WithValues("tag", req.GetMeta().GetTag())
-	log.Info("Running Function")
+	log.Info("Function Pipeline Started")
 	rsp := response.To(req, response.DefaultTTL)
 
 	input := &v1beta1.PatchWithCondition{}
 	if err := request.GetInput(req, input); err != nil {
-		response.Fatal(rsp, errors.Wrapf(err, "cannot get Function input from %T", req))
+		response.Fatal(rsp, errors.Wrapf(err, "Cannot get Function input from %T", req))
 		return rsp, nil
 	}
 
@@ -51,13 +51,13 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	desired, err := request.GetDesiredComposedResources(req)
 	if err != nil {
 		response.Fatal(rsp, errors.Wrap(err, "Can not get desired ComposedResource"))
-		return rsp, err
+		return rsp, nil
 	}
 
 	observed, err := request.GetObservedComposedResources(req)
 	if err != nil {
 		response.Fatal(rsp, errors.Wrap(err, "Can not get observed ComposedResource"))
-		return rsp, err
+		return rsp, nil
 	}
 
 	// *** substitution Loop *** //
@@ -68,12 +68,12 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 			observedPaved, err := fieldpath.PaveObject(cd.Resource)
 			if err != nil {
 				response.Fatal(rsp, errors.Wrap(err, "Can not create paved object from observed Resource"))
-				return rsp, err
+				return rsp, nil
 			}
 			getFieldPath, err := observedPaved.GetValue(obj.DestinationFieldPath)
 			if err != nil {
 				response.Fatal(rsp, errors.Wrap(err, "Can not get value of fieldpath from observed Resource"))
-				return rsp, err
+				return rsp, nil
 			}
 			getFieldValue, err := observedPaved.GetValue(obj.FieldValue)
 			if err != nil {
@@ -97,7 +97,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 	err = response.SetDesiredComposedResources(rsp, desired)
 	if err != nil {
 		response.Fatal(rsp, errors.Wrap(err, "Unable to generate the desired compose the object"))
-		return rsp, err
+		return rsp, nil
 	}
 
 	return rsp, nil
